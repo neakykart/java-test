@@ -14,10 +14,20 @@ public class TestDataSource {
     public static List<User> users = new LinkedList<>();
     public static List<Account> accounts = new LinkedList<>();
 
+    /**
+     * Generate unique ID for account creation
+     * @return
+     */
     public static String generateAccountId() {
         return "ACC"+UUID.randomUUID().toString();
     }
 
+    /**
+     * Generate test users
+     *
+     * @param n number to generate
+     * @return
+     */
     public static List<User> getTestUsers(int n) {
         List<User> users = new LinkedList<>();
 

@@ -15,7 +15,17 @@ import java.util.stream.Collectors;
 public class BankService {
     private DataService dataService = new DataService();
 
-    public Account createUserAccount(User user) {
+    /**
+     * Create user account
+     *
+     * @param user user object
+     * @return
+     */
+    public Account createUserAccount(User user) throws BankException {
+        if (user == null) {
+            throw new BankException("User is null", BankErrorCode.USER_IS_NULL_ERROR);
+        }
+
         return dataService.doAction(
                 () -> {
                     if (user.getId() != null) {
@@ -31,6 +41,12 @@ public class BankService {
                 , e -> System.err.println("Error: " + e.getMessage()));
     }
 
+    /**
+     * Find the user account using account id
+     *
+     * @param accountId user account id
+     * @return
+     */
     public Account findUserAccountById(String accountId) {
         List<Account> accounts = TestDataSource.accounts.stream()
                 .filter(account -> account.getId().equals(accountId))
@@ -38,7 +54,17 @@ public class BankService {
         return accounts.size() > 0 ? accounts.get(0) : null;
     }
 
-    public List<Account> findUserAccounts(User user) {
+    /**
+     * Find all user accounts
+     *
+     * @param user user object
+     * @return
+     */
+    public List<Account> findUserAccounts(User user) throws BankException {
+        if (user == null) {
+            throw new BankException("User is null", BankErrorCode.USER_IS_NULL_ERROR);
+        }
+
         return TestDataSource.accounts.stream()
                 .filter(account -> {
                     if (account.getUser() == null)
@@ -49,6 +75,12 @@ public class BankService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Update account balance value in storage
+     *
+     * @param accountId account id
+     * @param balance new balance value
+     */
     public void updateAccountBalance(String accountId, int balance) {
         dataService.doAction(
                 () -> {
@@ -68,21 +100,55 @@ public class BankService {
                 e -> System.err.println("Error: " + e.getMessage()));
     }
 
+    /**
+     * Deposit money in the user account
+     *
+     * @param account user account object
+     * @param value value to add to the balance
+     *
+     * @throws BankException
+     */
     public void depositMoneyInAccount(Account account, int value) throws BankException {
+        if (account == null) {
+            throw new BankException("Account is null", BankErrorCode.ACCOUNT_IS_NULL_ERROR);
+        }
+
         if (value < 0)
             throw new BankException("Negative money", BankErrorCode.NEGATIVE_MONEY_VALUE_ERROR);
 
         updateAccountBalance(account.getId(), account.getBalance() + value);
     }
 
+     /**
+     * Withdraw money in the user account
+     *
+     * @param account user account object
+     * @param value value to withdraw from the balance
+     *
+     * @throws BankException
+     */
     public void withdrawFromAccount(Account account, int value) throws BankException {
+        if (account == null) {
+            throw new BankException("Account is null", BankErrorCode.ACCOUNT_IS_NULL_ERROR);
+        }
+
         if (value < 0)
             throw new BankException("Negative money", BankErrorCode.NEGATIVE_MONEY_VALUE_ERROR);
 
         updateAccountBalance(account.getId(), account.getBalance() - value);
     }
 
-    public void deleteUserAccount(User user, String accountId) {
+    /**
+     * Remove user account from storage
+     *
+     * @param user user object
+     * @param accountId user account id
+     */
+    public void deleteUserAccount(User user, String accountId) throws BankException {
+        if (user == null) {
+            throw new BankException("User is null", BankErrorCode.USER_IS_NULL_ERROR);
+        }
+
         dataService.doAction(
                 () -> {
                     if (accountId != null) {
@@ -102,7 +168,17 @@ public class BankService {
                 e -> System.err.println("Error: " + e.getMessage()));
     }
 
-    public int getUserWealth(User user) {
+    /**
+     * Calculate user wealth
+     *
+     * @param user user object
+     * @return
+     */
+    public int getUserWealth(User user) throws BankException {
+        if (user == null) {
+            throw new BankException("User is null", BankErrorCode.USER_IS_NULL_ERROR);
+        }
+
         return TestDataSource.accounts.stream()
                 .filter(account -> {
                     if (account.getUser() == null)

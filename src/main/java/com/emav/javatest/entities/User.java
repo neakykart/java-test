@@ -73,6 +73,12 @@ public class User {
         return accounts;
     }
 
+    /**
+     * Set this object attribute with the value in parameter user object
+     *
+     * @param user user object to copy
+     * @return
+     */
     public User copy(User user)  {
         this.setLastName(user.getLastName());
         this.setFirstName(user.getFirstName());
